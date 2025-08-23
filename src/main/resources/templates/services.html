@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="../static/css/tlf.css" th:href="@{/css/tlf.css}"
+	rel="stylesheet" />
+
+<link th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link th:href="@{/css/app.css}" rel="stylesheet" />
+<script th:src="@{/webjars/bootstrap/5.3.7/js/bootstrap.bundle.min.js}"
+	defer></script>
+<script th:src="@{/js/app.js}" defer></script>
+
+<title>SOS</title>
+</head>
+<body>
+
+<div th:insert="~{header :: header}">...</div>
+
+	<div class="proclist" th:unless="${#lists.isEmpty(allServices)}">
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>Name</td>
+					<td>Running?</td>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="svcs : ${allServices}">
+					<td th:text="${{svcs.name}}"></td>
+					<td
+						th:style="${svcs.isRunning} ? 'background-color: green' : 'background-color: red'"
+						th:text="${svcs.isRunning} ? 'Yes' : 'No'" />
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
