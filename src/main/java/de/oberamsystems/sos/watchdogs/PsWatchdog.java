@@ -3,6 +3,7 @@ package de.oberamsystems.sos.watchdogs;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -48,7 +49,7 @@ public class PsWatchdog {
 			
 			// System.out.println(elems);
 			try {
-				/*
+				
 				String s = lines.getFirst().trim().replaceAll("\\s+", " ");
 				List<String> elems = Arrays.asList(s.split(" "));
 				String started = elems.get(8);
@@ -56,7 +57,7 @@ public class PsWatchdog {
 				
 				Instant currentTime = Instant.now();
 				Instant instant2 = Instant.parse("2019-04-21T05:25:00Z");
-				*/
+				
 				proc.setRunning(true);
 			} catch (NoSuchElementException e) {
 				proc.setRunning(false);
