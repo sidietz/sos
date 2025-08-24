@@ -10,9 +10,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.oberamsystems.sos.model.MyService;
 
 public class SystemdWatchdog {
+	
+	private static final Logger log = LoggerFactory.getLogger(SystemdWatchdog.class);
+
 	
 	private String shellCommand;
 	private MyService service;
@@ -56,7 +62,8 @@ public class SystemdWatchdog {
 				service.setRuntime2(datetime);
 			} catch (NoSuchElementException e) {
 				service.setRunning(false);
-				System.out.println("not running");
+				//System.out.println("not running");
+				log.warn(String.format("Service '%s' not running!", service));
 			}
 
 			/*

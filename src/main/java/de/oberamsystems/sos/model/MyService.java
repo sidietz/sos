@@ -5,7 +5,7 @@ import java.time.Duration;
 import jakarta.persistence.*;
 
 @Entity
-public class MyService {
+public class MyService implements IWatchable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -3,11 +3,17 @@ package de.oberamsystems.sos.watchdogs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.oberamsystems.sos.model.MyProcess;
 import de.oberamsystems.sos.model.MyProcessService;
 
 //@Component
-public class PsWatchdogController {
+public class PsWatchdogController implements IWatchdogController {
+	
+	private static final Logger log = LoggerFactory.getLogger(PsWatchdogController.class);
+
 
 	/*
 	 * @Autowired private SingletonBean singletonBean;
@@ -28,7 +34,7 @@ public class PsWatchdogController {
 	public void check() {
 		pWdgs = new ArrayList<PsWatchdog>();
 		for (MyProcess myproc : procService.getAllProcesses()) {
-			System.out.println(myproc.getName());
+			//System.out.println(myproc.getName());
 			PsWatchdog ps = new PsWatchdog(myproc);
 			
 			boolean before  = myproc.isRunning();			
@@ -38,7 +44,7 @@ public class PsWatchdogController {
 			if (before == true && after == true) {
 				;
 			} else if (before == true && after == false) {
-				System.out.println("Process " + proc2.getName() + " died!");
+				log.warn(String.format("Process '%s' died!", proc2.getName()));
 			} else if (before == false && after == true) {
 				
 			} else {

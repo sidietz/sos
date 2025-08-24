@@ -17,7 +17,7 @@ import de.oberamsystems.sos.model2.Sensor2;
 import de.oberamsystems.sos.model2.Sensor2Builder;
 
 @Component
-public class SensorWatchdogController {
+public class SensorWatchdogController implements IWatchdogController {
 	
 	private static final Logger log = LoggerFactory.getLogger(SensorWatchdogController.class);
 	@Autowired
@@ -52,12 +52,12 @@ public class SensorWatchdogController {
 		
 		List<Sensor2> sensor2s = Sensor2Builder.build(rs);
 		
-		log.warn(String.format("'%d'", sensor2s.size()));
+		log.debug(String.format("found sensor2 entries: '%d'", sensor2s.size()));
 		
 		if (sensor2s.size() <= 2) {
 						dbobj.setRunning(false);
 			dbObjectService.saveDbObject(dbobj);
-			System.out.println(dbobj);
+			//System.out.println(dbobj);
 			
 			log.warn("sensor2 not running");
 		} else {

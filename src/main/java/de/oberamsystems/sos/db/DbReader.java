@@ -65,6 +65,7 @@ public class DbReader {
 		} catch (Exception e) {
 			// handle any exceptions that occur
 			System.out.println("Exception is " + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}

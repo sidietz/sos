@@ -21,6 +21,7 @@ import de.oberamsystems.sos.model.MyServiceRepository;
 
 @SpringBootApplication
 @EnableScheduling
+//@EnableConfigurationProperties(Mailer.class)
 //@SpringBootApplication(scanBasePackages = "de.oberamsystems.sos.*")
 public class SosApplication {
 

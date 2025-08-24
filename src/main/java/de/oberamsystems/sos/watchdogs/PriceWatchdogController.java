@@ -11,26 +11,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.oberamsystems.sos.db.DbReader;
+import de.oberamsystems.sos.mail.EmailService;
+import de.oberamsystems.sos.mail.Mailer;
 import de.oberamsystems.sos.model.DbObject;
 import de.oberamsystems.sos.model.DbObjectService;
 import de.oberamsystems.sos.model2.Price;
 import de.oberamsystems.sos.model2.PriceBuilder;
 
 @Component
-public class PriceWatchdogController {
+public class PriceWatchdogController implements IWatchdogController {
 
 	private static final Logger log = LoggerFactory.getLogger(PriceWatchdogController.class);
 
-	@Autowired
 	private DbObjectService dbObjectService;
+	private EmailService mailer;
+	
+	//private EmailService emailService;
+	
 
 	public PriceWatchdogController() {
 	}
 
-	public PriceWatchdogController(DbObjectService dbObjectService) {
+	public PriceWatchdogController(DbObjectService dbObjectService, EmailService mailer) {
 		this.dbObjectService = dbObjectService;
+		this.mailer = mailer;
 	}
 
+	@Override
 	public void check() {
 		LocalDateTime date2 = LocalDateTime.now();
 		LocalDateTime date1 = date2.minusMinutes(15);
@@ -52,14 +59,16 @@ public class PriceWatchdogController {
 			return;
 		}
 		List<Price> sensor2s = PriceBuilder.build(rs);
-		log.warn(String.format("'%d'", sensor2s.size()));
+		log.debug(String.format("found price entries: '%d'", sensor2s.size()));
 
 		if (sensor2s.size() <= 2) {
 			dbobj.setRunning(false);
 			dbObjectService.saveDbObject(dbobj);
-			System.out.println(dbobj);
+			//System.out.println(dbobj);
 
-			log.warn("sensor2 not running");
+			log.warn("price not running");
+			String msg =  String.format("'%s' '%s' läuft nicht", "price", dbobj.getDbName());
+			mailer.sendEmail("simon.dietz@vodafone.de", "Test", msg);
 		} else {
 			dbobj.setRunning(true);
 			dbObjectService.saveDbObject(dbobj);

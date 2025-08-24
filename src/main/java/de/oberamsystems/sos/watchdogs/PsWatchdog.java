@@ -9,9 +9,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.oberamsystems.sos.model.MyProcess;
 
 public class PsWatchdog {
+	
+	private static final Logger log = LoggerFactory.getLogger(PsWatchdog.class);
 
 	private String shellCommand;
 	private MyProcess proc;
@@ -61,7 +66,8 @@ public class PsWatchdog {
 				proc.setRunning(true);
 			} catch (NoSuchElementException e) {
 				proc.setRunning(false);
-				System.out.println("not running");
+				log.warn(String.format("Process '%s' not running!", shellCommand));
+				//System.out.println("not running");
 			}
 
 			/*

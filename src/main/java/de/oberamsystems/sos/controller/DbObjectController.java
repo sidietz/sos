@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import de.oberamsystems.sos.model.DbObject;
 import de.oberamsystems.sos.model.DbObjectService;
+import de.oberamsystems.sos.model.IWatchable;
 
 @Controller
 public class DbObjectController {
@@ -18,7 +19,7 @@ public class DbObjectController {
 	
 	@ModelAttribute("allDbObjects")
 	public List<DbObject> populateDbObjects() {
-		for (DbObject obj : this.procService.getAllDbObjects()) {
+		for (IWatchable obj : this.procService.getAllDbObjects()) {
 			System.out.println(obj);
 		}
 	    return this.procService.getAllDbObjects();

@@ -11,7 +11,7 @@ public class DbObjectService {
 	@Autowired
 	private DbObjectRepository repository;
 	
-    public DbObject saveDbObject(DbObject service) {
+    public IWatchable saveDbObject(DbObject service) {
         return repository.save(service);
     }
 
@@ -23,7 +23,7 @@ public class DbObjectService {
         return (List<DbObject>) repository.findByDbName(name);
     }
 
-    public DbObject getDbObjectById(Long id) {
+    public IWatchable getDbObjectById(Long id) {
         return repository.findById(id).orElse(null);
     }
 

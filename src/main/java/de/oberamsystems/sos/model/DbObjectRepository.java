@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DbObjectRepository extends CrudRepository<DbObject, Long> {
 	List<DbObject> findByDbName(String dbName);
-	DbObject findById(long id);
+	IWatchable findById(long id);
 }

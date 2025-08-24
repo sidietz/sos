@@ -5,7 +5,7 @@ import java.time.Duration;
 import jakarta.persistence.*;
 
 @Entity
-public class DbObject {
+public class DbObject implements IWatchable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,18 +39,22 @@ public class DbObject {
 		this.runtime2 = runtime2;
 	}
 	
+	@Override
 	public Duration getRuntime() {
 		return runtime;
 	}
 	
+	@Override
 	public void setRuntime(Duration runtime) {
 		this.runtime = runtime;
 	}
 	
+	@Override
 	public boolean isRunning() {
 		return isRunning;
 	}
 	
+	@Override
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
