@@ -1,6 +1,5 @@
 package de.oberamsystems.sos;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import de.oberamsystems.sos.model.MyService;
@@ -41,7 +39,7 @@ class SosApplicationTests {
 
 	    List<MyService> found = repo.findByName(s.getName());
 
-	    assertThat(found.get(0).getName()).isEqualTo(s.getName());
+	    assertEquals(found.get(0).getName(), s.getName());
 	}
 
 	@Test
@@ -89,7 +87,7 @@ class SosApplicationTests {
 	    
 	    List<NotRunner> newNr = MasterScheduler.wentNotRunning(new ArrayList<NotRunner>(), oldNr);
 
-	    assertThat(newNr.isEmpty());
+	    assertEquals(newNr.size(), 1);
 	}
 
 }
