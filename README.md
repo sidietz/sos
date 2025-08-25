@@ -9,3 +9,6 @@ sos observed
 - Prozesse
 - Dienste
 - Datenbankaktivität
+
+## Language
+Die Software ist unlokalisiert, um den Sprachmischmasch zu komplettieren.
