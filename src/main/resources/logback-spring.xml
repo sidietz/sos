@@ -7,7 +7,7 @@
 	<import class="ch.qos.logback.core.ConsoleAppender" />
 	<import class="ch.qos.logback.core.rolling.RollingFileAppender" />
 	<import
-		class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy" />
+		class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy" />
 
 	<import class="ch.qos.logback.classic.filter.ThresholdFilter" />
 	<appender name="CONSOLE" class="ConsoleAppender">
@@ -22,8 +22,8 @@
 
 	<appender name="FILE" class="RollingFileAppender">
 		<file>sos.log</file>
-		<rollingPolicy class="TimeBasedRollingPolicy">
-			<fileNamePattern>logFile.%d{yyyy-MM}.log</fileNamePattern>
+		<rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>sos.%d{yyyy-MM}-%i.log</fileNamePattern>
 			<maxHistory>36</maxHistory>
 			<maxFileSize>128MB</maxFileSize>
 			<totalSizeCap>1GB</totalSizeCap>
