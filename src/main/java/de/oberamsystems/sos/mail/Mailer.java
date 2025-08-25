@@ -32,7 +32,6 @@ public class Mailer {
 	Message message;
 
 	public Mailer() {
-		System.out.println(username + password);
 
 		Properties prop = new Properties();
 		prop.put("mail.smtp.auth", true);

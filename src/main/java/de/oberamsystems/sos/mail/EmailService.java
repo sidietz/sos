@@ -47,7 +47,7 @@ public class EmailService {
 			message.setFrom(emailServiceConfig.getFrom());
 			message.setTo(emailServiceConfig.getTo());
 			message.setSubject(subject);
-			String htmlContent = this.templateEngine.process("default.html", ctx);
+			String htmlContent = this.templateEngine.process("mail/default.html", ctx);
 
 			message.setText(htmlContent, true);
 
@@ -70,7 +70,7 @@ public class EmailService {
 			message.setFrom(emailServiceConfig.getFrom());
 			message.setTo(emailServiceConfig.getTo());
 			message.setSubject(subject);
-			String htmlContent = this.templateEngine.process("default.html", ctx);
+			String htmlContent = this.templateEngine.process("mail/default.html", ctx);
 
 			message.setText(htmlContent, true);
 
@@ -93,7 +93,7 @@ public void sendHtmlEmail(String subject, List<NotRunner> runners, List<NotRunne
 			message.setFrom(emailServiceConfig.getFrom());
 			message.setTo(emailServiceConfig.getTo());
 			message.setSubject(subject);
-			String htmlContent = this.templateEngine.process("default.html", ctx);
+			String htmlContent = this.templateEngine.process("mail/default.html", ctx);
 
 			message.setText(htmlContent, true);
 
