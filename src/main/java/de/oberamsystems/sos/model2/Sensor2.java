@@ -9,7 +9,6 @@ import java.util.List;
 public class Sensor2 extends DbEntry {
 
 	private int id;
-	// @Column(name = "date", columnDefinition = "TIMESTAMP")
 	private LocalDateTime date;
 	private String place;
 	private String sensor;
@@ -29,11 +28,6 @@ public class Sensor2 extends DbEntry {
 		this.temperature = temperature;
 		this.humidity = humidity;
 		this.co2 = co2;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Sensor2[id=%d, date='%s', sensor='%s', co2='%s']", id, date, sensor, co2);
 	}
 
 	public LocalDateTime getDate() {
@@ -83,13 +77,17 @@ public class Sensor2 extends DbEntry {
 	public void setCo2(float co2) {
 		this.co2 = co2;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Sensor2[id=%d, date='%s', sensor='%s', co2='%s']", id, date, sensor, co2);
+	}
 
 	public List<DbEntry> build(ResultSet rs) {
 
 		List<DbEntry> prices = new ArrayList<DbEntry>();
 		try {
 			while (rs.next()) {
-
 				int id = rs.getInt("id");
 				LocalDateTime date = rs.getTimestamp("date").toLocalDateTime();
 				String place = rs.getString("place");
@@ -99,14 +97,12 @@ public class Sensor2 extends DbEntry {
 				float co2 = rs.getFloat("co2");
 
 				Sensor2 p = new Sensor2(id, date, place, sensor, temperature, humidity, co2);
-				// System.out.println(e10);
 				prices.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-
 		return prices;
 
 	}

@@ -91,7 +91,6 @@ public class DbObjectController implements IWatchdogController {
 		params.add(date2.toString());
 
 		try {
-			//DbEntry ob = c.getDeclaredConstructor().newInstance();
 			DbReader dbR = new DbReader("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/" + getDbNameFromType(),
 					"simon", "N0m1596.");
 			ResultSet rs = dbR.execute(query, params);
@@ -108,7 +107,7 @@ public class DbObjectController implements IWatchdogController {
 				return true;
 			}
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
+			log.warn(String.format("DbObjectService error message: ", e.getMessage()));
 			e.printStackTrace();
 			return false;
 		}

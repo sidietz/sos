@@ -6,7 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.oberamsystems.sos.MasterScheduler;
+
 public class DbReader {
+	
+	private static final Logger log = LoggerFactory.getLogger(MasterScheduler.class);
 
 	private String connectionString;
 	private String driver;
@@ -22,49 +29,25 @@ public class DbReader {
 	
 	public ResultSet execute(String query, List<String> params) {
 		try {
-			// load the MySQL JDBC driver
 			Class.forName(driver);
-
-			// establish connection with the database
 			Connection con = DriverManager.getConnection(connectionString, user, password);
 			if (con != null) {
-				// SQL query to retrieve data from the 'book' table
 				
 				PreparedStatement stmt = con.prepareStatement(query);
-
 				for (int i=0; i<params.size(); i++) {
 					stmt.setString(i+1, params.get(i));
 				}
 				
-				// execute the query and get the result set
 				ResultSet resultSet = stmt.executeQuery();
-				
-				
 				con.close();
-				return resultSet;
-				/*
-				System.out.println("The Available Data\n");
-
-				// iterate through the result set and print the data
-				while (resultSet.next()) {
-					int id = resultSet.getInt("id");
-					String author_name = resultSet.getString("author");
-					String book_name = resultSet.getString("name");
-					String book_price = resultSet.getString("price");
-
-					// print the retrieved data
-					System.out.println("ID: " + id + ", Author_Name: " + author_name + ", Book_Name: " + book_name
-							+ ", Book_Price " + book_price);
-				}
-				*/
 				
+				return resultSet;				
 			} else {
 				System.out.println("Not Connected...");
 				return null;
 			}
 		} catch (Exception e) {
-			// handle any exceptions that occur
-			System.out.println("Exception is " + e.getMessage());
+			log.warn(String.format("DbReader failed with error message %s", e.getMessage()));
 			e.printStackTrace();
 			return null;
 		}

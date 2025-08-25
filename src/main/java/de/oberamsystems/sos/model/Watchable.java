@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-//@MappedSuperclass
 public abstract class Watchable {
 
 	@Id
@@ -85,7 +84,7 @@ public abstract class Watchable {
 	        result = false;
 		}
 	    else{
-	        result = (id == ((Watchable) other).id); //&&  age.equals(other.age);
+	        result = (id == ((Watchable) other).id);
 	    }
 
 	    return result;

@@ -4,20 +4,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-//import jakarta.persistence.*;
-
-//@Entity
 public class NotRunner {
-	
-	/*@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	*/
-	//@OneToOne//(cascade = CascadeType.PERSIST)
+
 	private Watchable watchable;
 	private LocalDateTime notRunningSince;
 	private String notRunningSince2;
 	private Duration duration;
-	
+
 	public NotRunner() {
 	}
 
@@ -26,19 +19,6 @@ public class NotRunner {
 		this.notRunningSince = notRunningSince;
 		this.notRunningSince2 = localDateTimeToString(notRunningSince);
 		this.duration = duration;
-	}
-	
-	private static String localDateTimeToString(LocalDateTime ldt) {
-		if (ldt == null) {
-			return "";
-		} else {
-			return ldt.format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss"));	
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("NotRunner[Watchable=%s, name='%s', kind='%s']", watchable.toString(), "", "");
 	}
 
 	public Watchable getWatchable() {
@@ -69,20 +49,27 @@ public class NotRunner {
 	public void setDuration(Duration duration) {
 		this.duration = duration;
 	}
-	
-	@Override
-	public boolean equals(Object other){
-	    boolean result;
-	    if((other == null) || (getClass() != other.getClass())){
-	        result = false;
-		}
-	    else {
-	        result = watchable.equals(((NotRunner) other).watchable); //&&  age.equals(other.age);
-	    }
 
-	    return result;
+	@Override
+	public boolean equals(Object other) {
+		if ((other == null) || (getClass() != other.getClass())) {
+			return false;
+		} else {
+			return watchable.equals(((NotRunner) other).watchable); // && age.equals(other.age);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("NotRunner[Watchable=%s, name='%s', kind='%s']", watchable.toString(), "", "");
 	}
 	
-
+	private static String localDateTimeToString(LocalDateTime ldt) {
+		if (ldt == null) {
+			return "";
+		} else {
+			return ldt.format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss"));
+		}
+	}
 
 }

@@ -7,8 +7,6 @@ public abstract class DbEntry {
 
 	public DbEntry() {
 	}
-	
-	//public List<DbEntry> build(ResultSet rs);
 
 	public abstract <T extends DbEntry> List<T> build(ResultSet rs);
 	

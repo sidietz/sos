@@ -39,20 +39,21 @@ public class SystemdWatchdog {
 
 			BufferedReader r = new BufferedReader(new InputStreamReader(last.getInputStream()));
 			List<String> lines = r.lines().collect(Collectors.toList());
-
 			String s = lines.getFirst().trim().replaceAll("\\s+", " ");
 			List<String> elems = Arrays.asList(s.split(" "));
 
 			try {
 				String date = elems.get(5);
 				String time = elems.get(6);
-				service.setRunning(true);
+				
 				String datetime = date + "T" + time + "Z";				
 				Instant currentTime = Instant.now();
 				Instant instant2 = Instant.parse(datetime);
 				Duration d = Duration.between(currentTime, instant2);
+				
 				service.setRuntime(d);
 				service.setRuntime2(datetime);
+				service.setRunning(true);
 			} catch (NoSuchElementException e) {
 				e.printStackTrace();
 				service.setRunning(false);

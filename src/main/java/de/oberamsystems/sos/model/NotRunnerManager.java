@@ -24,19 +24,6 @@ public class NotRunnerManager {
 
 	public void deleteNotRunnerById(NotRunner notRunner) {
 		notRunners.remove(notRunner);
-		
-		/*
-		List<Integer> toDelete = new ArrayList<Integer>();
-		for (NotRunner nr : notRunners) {
-			if (nr.getId() == id) {
-				toDelete.add(id);
-			}
-		}
-		
-		for (int tmp : toDelete) {
-			notRunners.remove(tmp);
-		}
-		*/
 	}
 
 	public void addNotRunner(NotRunner nr) {

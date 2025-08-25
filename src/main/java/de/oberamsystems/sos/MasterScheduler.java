@@ -169,7 +169,7 @@ public class MasterScheduler {
 			return;
 		}
 
-		String subject = "[SOS] not running stuff";// getSubject(nr);
+		String subject = "[SOS] not running stuff";
 
 		mailer.sendHtmlEmail(subject, nrs, nrs2);
 	}
@@ -180,7 +180,7 @@ public class MasterScheduler {
 			return;
 		}
 
-		String subject = "[SOS] not running stuff";// getSubject(nr);
+		String subject = "[SOS] not running stuff";
 
 		mailer.sendHtmlEmail(subject, nrs, nrs2, nrs3);
 	}

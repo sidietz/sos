@@ -26,11 +26,6 @@ public class Price extends DbEntry {
 	public Price() {
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Price[date='%s', stationId='%s', e10='%s']", date, stationId, e10);
-	}
-
 	public String getStationId() {
 		return stationId;
 	}
@@ -70,6 +65,11 @@ public class Price extends DbEntry {
 	public void setE10(float e10) {
 		this.e10 = e10;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Price[date='%s', stationId='%s', e10='%s']", date, stationId, e10);
+	}
 
 	@Override
 	public List<DbEntry> build(ResultSet rs) {
@@ -77,8 +77,6 @@ public class Price extends DbEntry {
 		List<DbEntry> prices = new ArrayList<DbEntry>();
 		try {
 			while (rs.next()) {
-
-				// int id = rs.getInt("id");
 				String stationId = rs.getString("station_id");
 				LocalDateTime date = rs.getTimestamp("changed_at").toLocalDateTime();
 				float diesel = rs.getFloat("diesel");
@@ -86,14 +84,12 @@ public class Price extends DbEntry {
 				float e10 = rs.getFloat("e10");
 
 				Price p = new Price(stationId, date, diesel, e5, e10);
-				// System.out.println(e10);
 				prices.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-
 		return prices;
 
 	}

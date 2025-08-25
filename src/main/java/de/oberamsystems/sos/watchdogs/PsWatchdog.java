@@ -32,9 +32,6 @@ public class PsWatchdog {
 
 	public void check() {
 		try {
-			
-			//ps -eo pid,lstart,etime,command | grep thunderbird
-			
 			List<ProcessBuilder> builders = Arrays.asList(new ProcessBuilder("ps", "-eo", "pid,etimes,command"),
 					new ProcessBuilder("grep", shellCommand));
 
@@ -44,20 +41,19 @@ public class PsWatchdog {
 			BufferedReader r = new BufferedReader(new InputStreamReader(last.getInputStream()));
 			List<String> lines = r.lines().collect(Collectors.toList());
 			lines.removeLast();
+			String s = lines.getFirst().trim().replaceAll("\\s+", " ");
+			List<String> elems = Arrays.asList(s.split(" "));
 			
 			try {
-				
-				String s = lines.getFirst().trim().replaceAll("\\s+", " ");
-				List<String> elems = Arrays.asList(s.split(" "));
 				String started = elems.get(1);
 				String cmd = elems.get(2);
 				
 				Instant currentTime = Instant.now();
 				Instant instant2 = currentTime.minusSeconds((long) Integer.valueOf(started));
 				Duration d = Duration.between(currentTime, instant2);
+				
 				proc.setRuntime(d);
 				proc.setRuntime2(started);
-				
 				proc.setRunning(true);
 			} catch (NoSuchElementException e) {
 				proc.setRunning(false);
