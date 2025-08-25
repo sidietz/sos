@@ -2,10 +2,9 @@ package de.oberamsystems.sos.spritdisplay;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.data.repository.CrudRepository;
-
-public interface FuelPriceRepository extends CrudRepository<FuelPrice, Integer> {
+public interface FuelPriceRepository extends JpaRepository<FuelPrice, Integer> {
 	List<FuelPrice> findByDateTime(LocalDateTime date);
 	FuelPrice findById(int id);
 }
