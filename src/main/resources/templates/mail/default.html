@@ -17,9 +17,9 @@
 		</thead>
 		<tbody>
 			<tr style='text-align: center' th:each="r : ${runners}">
-				<td th:text="${{r.watchable.name}}"></td>
-				<td th:text="${{r.watchable.kind}}"></td>
-				<td th:text="${{r.notRunningSince2}}"></td>
+				<td th:text="${r.watchable.name}"></td>
+				<td th:text="${r.watchable.kind}"></td>
+				<td th:text="${r.notRunningSince}"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -37,9 +37,9 @@
 		</thead>
 		<tbody>
 			<tr style='text-align: center' th:each="r : ${runners2}">
-				<td th:text="${{r.watchable.name}}"></td>
-				<td th:text="${{r.watchable.kind}}"></td>
-				<td th:text="${{r.notRunningSince2}}"></td>
+				<td th:text="${r.watchable.name}"></td>
+				<td th:text="${r.watchable.kind}"></td>
+				<td th:text="${r.notRunningSince}"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -56,9 +56,9 @@
 		</thead>
 		<tbody>
 			<tr style='text-align: center' th:each="r : ${runners3}">
-				<td th:text="${{r.watchable.name}}"></td>
-				<td th:text="${{r.watchable.kind}}"></td>
-				<td th:text="${{r.notRunningSince2}}"></td>
+				<td th:text="${r.watchable.name}"></td>
+				<td th:text="${r.watchable.kind}"></td>
+				<td th:text="${r.notRunningSince}"></td>
 			</tr>
 		</tbody>
 	</table>
