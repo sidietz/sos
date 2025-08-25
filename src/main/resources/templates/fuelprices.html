@@ -12,28 +12,33 @@
 	defer></script>
 <script th:src="@{/js/app.js}" defer></script>
 
-<title>SOS - dbobjects</title>
+<title>[mqtt] Measurements</title>
 </head>
 <body>
 
-<div th:insert="~{header :: header}">...</div>
+	<div th:insert="~{header :: header}">...</div>
 
-	<div class="proclist" th:unless="${#lists.isEmpty(allDbObjects)}">
+	<div class="alist" th:unless="${#lists.isEmpty(allFuelPrices)}">
 
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<td>Name</td>
-					<td>Running?</td>
-
+					<td>ID</td>
+					<td>station_id</td>
+					<td>changed_at</td>
+					<td>diesel</td>
+					<td>e5</td>
+					<td>e10</
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="procs : ${allDbObjects}">
-					<td th:text="${{procs.dbName}}"></td>
-					<td
-						th:style="${procs.isRunning} ? 'background-color: green' : 'background-color: red'"
-						th:text="${procs.isRunning} ? 'Yes' : 'No'" />
+				<tr th:each="e : ${allFuelPrices}">
+					<td th:text="${e.id}"></td>
+					<td th:text="${e.stationId}"></td>
+					<td th:text="${e.date}"></td>
+					<td th:text="${e.diesel}"></td>
+					<td th:text="${e.e5}"></td>
+					<td th:text="${e.e10}"></td>
 			</tbody>
 		</table>
 	</div>
