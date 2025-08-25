@@ -19,12 +19,9 @@ import de.oberamsystems.sos.model.MyProcessService;
 import de.oberamsystems.sos.model.MyServiceService;
 import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model.NotRunnerManager;
-import de.oberamsystems.sos.model2.Sensor2;
 import de.oberamsystems.sos.watchdogs.DbObjectController;
 import de.oberamsystems.sos.watchdogs.IWatchdogController;
-import de.oberamsystems.sos.watchdogs.PriceWatchdogController;
 import de.oberamsystems.sos.watchdogs.PsWatchdogController;
-import de.oberamsystems.sos.watchdogs.SensorWatchdogController;
 import de.oberamsystems.sos.watchdogs.SystemdWatchdogController;
 
 @Component
@@ -54,15 +51,11 @@ public class MasterScheduler {
 		List<NotRunner> oldNotRunners = notRunnerService.getNotRunners();
 		List<NotRunner> newNotRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
 
-		// System.out.println("Ran scheduled!");
 		log.debug("run scheduled tasks");
 		IWatchdogController pwc = new PsWatchdogController(procService);
 		pwc.check();
-
 		IWatchdogController swc = new SystemdWatchdogController(serviceService);
 		swc.check();
-
-		//IWatchdogController dbc = new SensorWatchdogController(dbObjectService);
 		IWatchdogController dbc2 = new DbObjectController(dbObjectService, "sensor2");
 		dbc2.check();
 		IWatchdogController pc = new DbObjectController(dbObjectService, "price");
@@ -77,13 +70,8 @@ public class MasterScheduler {
 		tmp = visitController(pc);
 		newNotRunners.addAll(tmp);
 
-		// printNotRunners(tmp);
-
 		List<NotRunner> wentRunning = wentRunning(oldNotRunners, newNotRunners);
 		List<NotRunner> wentNotRunning = wentNotRunning(oldNotRunners, newNotRunners);
-
-		// printNotRunners(wentNotRunning);
-		// printNotRunners(wentRunning);
 
 		for (NotRunner nr : wentNotRunning) {
 			nr.setNotRunningSince(LocalDateTime.now());
@@ -113,22 +101,12 @@ public class MasterScheduler {
 			stillNotRunning.remove(nr);
 		}
 
-
-
-		/*
-		 * for (NotRunner nr : notRunnerService.getNotRunners()) {
-		 * notRunnerService.deleteNotRunnerById(nr.getId()); }
-		 */
-
-		// notRunnerService.clear();
-
 		for (NotRunner nr : wentNotRunning) {
 			nr.setDuration(Duration.between(nr.getNotRunningSince(), LocalDateTime.now()));
 			notRunnerService.addNotRunner(nr);
 		}
 
 		sendNrMail(wentNotRunning, wentRunning, stillNotRunning);
-		// notRunnerService.setNotRunners(newNotRunners);
 
 		return 0;
 	}

@@ -17,7 +17,7 @@ import de.oberamsystems.sos.model2.Sensor2;
 
 public class WatchdogController {
 
-	private static final Logger log = LoggerFactory.getLogger(SensorWatchdogController.class);
+	private static final Logger log = LoggerFactory.getLogger(WatchdogController.class);
 	@Autowired
 	protected DbObjectService dbObjectService;
 
