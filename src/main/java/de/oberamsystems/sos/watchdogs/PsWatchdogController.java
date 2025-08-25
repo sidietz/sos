@@ -37,9 +37,9 @@ public class PsWatchdogController implements IWatchdogController {
 			if (before == true && after == true) {
 				;
 			} else if (before == true && after == false) {
-				log.warn(String.format("Process '%s' died!", myproc.getName()));
+				log.info(String.format("Process '%s' died!", myproc.getName()));
 			} else if (before == false && after == true) {
-				log.warn(String.format("Service '%s' recovered!", myproc.getName()));
+				log.info(String.format("Service '%s' recovered!", myproc.getName()));
 			} else {
 				;
 			}
@@ -54,7 +54,7 @@ public class PsWatchdogController implements IWatchdogController {
 		List<NotRunner> notRunners = new ArrayList<NotRunner>();
 		for (MyProcess service : procService.getAllProcesses()) {
 			if(!service.isRunning()) {
-				log.warn("not runner: " + service.getName());
+				log.debug("not runner: " + service.getName());
 				notRunners.add(new NotRunner(service, null, null));
 			}
 		}

@@ -2,6 +2,7 @@ package de.oberamsystems.sos.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 //import jakarta.persistence.*;
 
@@ -14,6 +15,7 @@ public class NotRunner {
 	//@OneToOne//(cascade = CascadeType.PERSIST)
 	private Watchable watchable;
 	private LocalDateTime notRunningSince;
+	private String notRunningSince2;
 	private Duration duration;
 	
 	public NotRunner() {
@@ -22,7 +24,16 @@ public class NotRunner {
 	public NotRunner(Watchable watchable, LocalDateTime notRunningSince, Duration duration) {
 		this.watchable = watchable;
 		this.notRunningSince = notRunningSince;
+		this.notRunningSince2 = localDateTimeToString(notRunningSince);
 		this.duration = duration;
+	}
+	
+	private static String localDateTimeToString(LocalDateTime ldt) {
+		if (ldt == null) {
+			return "";
+		} else {
+			return ldt.format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss"));	
+		}
 	}
 	
 	@Override
@@ -44,6 +55,11 @@ public class NotRunner {
 
 	public void setNotRunningSince(LocalDateTime notRunningSince) {
 		this.notRunningSince = notRunningSince;
+		this.notRunningSince2 = localDateTimeToString(notRunningSince);
+	}
+
+	public String getNotRunningSince2() {
+		return notRunningSince2;
 	}
 
 	public Duration getDuration() {

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h3>The following stuff has stopped running:</h3>
+	<table>
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Kind</td>
+				<td>Not running since</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="r : ${runners}">
+				<td th:text="${{r.watchable.name}}"></td>
+				<td th:text="${{r.watchable.kind}}"></td>
+				<td th:text="${{r.notRunningSince}}"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

@@ -13,8 +13,8 @@ import de.oberamsystems.sos.db.DbReader;
 import de.oberamsystems.sos.model.DbObject;
 import de.oberamsystems.sos.model.DbObjectService;
 import de.oberamsystems.sos.model.NotRunner;
+import de.oberamsystems.sos.model2.DbEntry;
 import de.oberamsystems.sos.model2.Price;
-import de.oberamsystems.sos.model2.PriceBuilder;
 
 @Component
 public class PriceWatchdogController implements IWatchdogController {
@@ -62,7 +62,9 @@ public class PriceWatchdogController implements IWatchdogController {
 			return false;
 		}
 		
-		List<Price> sensor2s = PriceBuilder.build(rs);
+		Price p = new Price();
+		
+		List<DbEntry> sensor2s = p.build(rs);
 		if (sensor2s.size() <= 2) {
 			return false;
 		} else {

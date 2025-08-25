@@ -41,9 +41,9 @@ public class SystemdWatchdogController implements IWatchdogController {
 			if (before == true && after == true) {
 				;
 			} else if (before == true && after == false) {
-				log.warn(String.format("Service '%s' died!", myproc.getName()));
+				log.info(String.format("Service '%s' died!", myproc.getName()));
 			} else if (before == false && after == true) {
-				log.warn(String.format("Service '%s' recovered!", myproc.getName()));
+				log.info(String.format("Service '%s' recovered!", myproc.getName()));
 			} else {
 				;
 			}
@@ -58,7 +58,7 @@ public class SystemdWatchdogController implements IWatchdogController {
 		List<NotRunner> notRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
 		for (MyService service : serviceService.getAllServices()) {
 			if(!service.isRunning()) {
-				log.warn("not runner: " + service.getName());
+				log.debug("not runner: " + service.getName());
 				notRunners.add(new NotRunner(service, null, null));
 			}
 		}

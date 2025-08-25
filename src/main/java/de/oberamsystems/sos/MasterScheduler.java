@@ -64,52 +64,72 @@ public class MasterScheduler {
 		dbc.check();
 		IWatchdogController pc = new PriceWatchdogController(dbObjectService);
 		pc.check();
-		
-		List<NotRunner> tmp = visitController(pwc);		
+
+		List<NotRunner> tmp = visitController(pwc);
 		newNotRunners.addAll(tmp);
-		tmp = visitController(swc);		
+		tmp = visitController(swc);
 		newNotRunners.addAll(tmp);
 		tmp = visitController(dbc);
 		newNotRunners.addAll(tmp);
 		tmp = visitController(pc);
 		newNotRunners.addAll(tmp);
-		
-		//printNotRunners(tmp);
+
+		// printNotRunners(tmp);
 
 		List<NotRunner> wentRunning = wentRunning(oldNotRunners, newNotRunners);
 		List<NotRunner> wentNotRunning = wentNotRunning(oldNotRunners, newNotRunners);
 
-		printNotRunners(wentNotRunning);
-		printNotRunners(wentRunning);
-		
+		// printNotRunners(wentNotRunning);
+		// printNotRunners(wentRunning);
+
 		for (NotRunner nr : wentNotRunning) {
 			nr.setNotRunningSince(LocalDateTime.now());
-			log.warn(String.format("'%s' '%s' went not running", nr.getWatchable().getKind(), nr.getWatchable().getName()));
+			log.warn(String.format("'%s' '%s' went not running", nr.getWatchable().getKind(),
+					nr.getWatchable().getName()));
 		}
 
 		for (NotRunner nr : wentRunning) {
-			log.warn(String.format("'%s' '%s' went running, again", nr.getWatchable().getKind(), nr.getWatchable().getName()));
+			log.warn(String.format("'%s' '%s' went running, again", nr.getWatchable().getKind(),
+					nr.getWatchable().getName()));
 			notRunnerService.deleteNotRunnerById(nr);
 		}
 
-		/*
-		for (NotRunner nr : notRunnerService.getNotRunners()) {
-			notRunnerService.deleteNotRunnerById(nr.getId());
-		}*/
+		List<NotRunner> stillNotRunning = new ArrayList<NotRunner>(notRunnerService.getNotRunners());
+
 		
-		notRunnerService.clear();
+		List<NotRunner> toDelete = new ArrayList<NotRunner>();
+
+		for (NotRunner nr : wentNotRunning) {
+			if (stillNotRunning.contains(nr)) {
+				toDelete.add(nr);
+			}
+		}
+		
+		for (NotRunner nr : toDelete) {
+			stillNotRunning.remove(nr);
+			stillNotRunning.remove(nr);
+		}
+
+
+
+		/*
+		 * for (NotRunner nr : notRunnerService.getNotRunners()) {
+		 * notRunnerService.deleteNotRunnerById(nr.getId()); }
+		 */
+
+		// notRunnerService.clear();
 
 		for (NotRunner nr : wentNotRunning) {
 			nr.setDuration(Duration.between(nr.getNotRunningSince(), LocalDateTime.now()));
 			notRunnerService.addNotRunner(nr);
 		}
-		
-		sendNrMail(wentNotRunning);
-		notRunnerService.setNotRunners(newNotRunners);
+
+		sendNrMail(wentNotRunning, wentRunning, stillNotRunning);
+		// notRunnerService.setNotRunners(newNotRunners);
 
 		return 0;
 	}
-	
+
 	private static void printNotRunners(List<NotRunner> oldNr) {
 		for (NotRunner nr : oldNr) {
 			System.out.println(nr);
@@ -152,20 +172,36 @@ public class MasterScheduler {
 	}
 
 	private void sendNrMail(List<NotRunner> nrs) {
-		
+
 		if (nrs.isEmpty()) {
 			return;
 		}
 
-		String body = "The following stuff went not runnning!\n";
+		String subject = "[SOS] not running stuff";
+
+		mailer.sendHtmlEmail(subject, nrs);
+	}
+
+	private void sendNrMail(List<NotRunner> nrs, List<NotRunner> nrs2) {
+
+		if (nrs.isEmpty() && nrs2.isEmpty()) {
+			return;
+		}
 
 		String subject = "[SOS] not running stuff";// getSubject(nr);
 
-		for (NotRunner nr : nrs) {
-			body = body + getBody(nr) + "\n";
-		}
-		mailer.sendEmail(subject, body);
+		mailer.sendHtmlEmail(subject, nrs, nrs2);
+	}
 
+	private void sendNrMail(List<NotRunner> nrs, List<NotRunner> nrs2, List<NotRunner> nrs3) {
+
+		if (nrs.isEmpty() && nrs2.isEmpty()) {
+			return;
+		}
+
+		String subject = "[SOS] not running stuff";// getSubject(nr);
+
+		mailer.sendHtmlEmail(subject, nrs, nrs2, nrs3);
 	}
 
 	private String getSubject(NotRunner nr) {
@@ -176,12 +212,9 @@ public class MasterScheduler {
 		return String.format("The '%s' '%s' died\nand is not running since '%s'", nr.getWatchable().getKind(),
 				nr.getWatchable().getName(), humanReadableFormat(nr.getDuration()));
 	}
-	
+
 	private static String humanReadableFormat(Duration duration) {
-	    return duration.toString()
-	            .substring(2)
-	            .replaceAll("(\\d[HMS])(?!$)", "$1 ")
-	            .toLowerCase();
+		return duration.toString().substring(2).replaceAll("(\\d[HMS])(?!$)", "$1 ").toLowerCase();
 	}
 
 }

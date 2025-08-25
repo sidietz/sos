@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import org.slf4j.Logger;
@@ -20,10 +21,11 @@ import de.oberamsystems.sos.model.MyService;
 import de.oberamsystems.sos.model.MyServiceRepository;
 
 @SpringBootApplication
+@Configuration
 @EnableScheduling
 //@EnableConfigurationProperties(Mailer.class)
 //@SpringBootApplication(scanBasePackages = "de.oberamsystems.sos.*")
-public class SosApplication {
+public class SosApplication  {
 
 	private static final Logger log = LoggerFactory.getLogger(SosApplication.class);
 

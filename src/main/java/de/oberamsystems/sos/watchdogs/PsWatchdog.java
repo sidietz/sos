@@ -3,6 +3,7 @@ package de.oberamsystems.sos.watchdogs;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public class PsWatchdog {
 			
 			//ps -eo pid,lstart,etime,command | grep thunderbird
 			
-			List<ProcessBuilder> builders = Arrays.asList(new ProcessBuilder("ps", "aux"),
+			List<ProcessBuilder> builders = Arrays.asList(new ProcessBuilder("ps", "-eo", "pid,etimes,command"),
 					new ProcessBuilder("grep", shellCommand));
 
 			List<Process> processes = ProcessBuilder.startPipeline(builders);
@@ -48,18 +49,21 @@ public class PsWatchdog {
 				
 				String s = lines.getFirst().trim().replaceAll("\\s+", " ");
 				List<String> elems = Arrays.asList(s.split(" "));
-				String started = elems.get(8);
-				String cmd = elems.get(10);
+				String started = elems.get(1);
+				String cmd = elems.get(2);
 				
 				Instant currentTime = Instant.now();
-				Instant instant2 = Instant.parse("2019-04-21T05:25:00Z");
+				Instant instant2 = currentTime.minusSeconds((long) Integer.valueOf(started));
+				Duration d = Duration.between(currentTime, instant2);
+				proc.setRuntime(d);
+				proc.setRuntime2(started);
 				
 				proc.setRunning(true);
 			} catch (NoSuchElementException e) {
 				proc.setRunning(false);
-				log.warn(String.format("Process '%s' not running!", shellCommand));
+				log.info(String.format("Process '%s' not running!", shellCommand));
 			}
-		} catch (IOException | NoSuchElementException e) {
+		} catch (IOException | NoSuchElementException | IndexOutOfBoundsException | NumberFormatException e) {
 			proc.setRunning(false);
 		}
 

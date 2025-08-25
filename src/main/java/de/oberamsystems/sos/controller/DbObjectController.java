@@ -20,7 +20,7 @@ public class DbObjectController {
 	@ModelAttribute("allDbObjects")
 	public List<DbObject> populateDbObjects() {
 		for (Watchable obj : this.procService.getAllDbObjects()) {
-			System.out.println(obj);
+			//System.out.println(obj);
 		}
 	    return this.procService.getAllDbObjects();
 	}
