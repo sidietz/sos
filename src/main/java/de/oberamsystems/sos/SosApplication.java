@@ -102,6 +102,7 @@ public class SosApplication {
 		return (args) -> {
 			// save a few customers
 			repository.save(new MyService("sshd"));
+			repository.save(new MyService("samba"));
 		};
 	}
 	

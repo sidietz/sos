@@ -47,14 +47,14 @@ public class WatchdogController {
 		
 		List<Sensor2> sensor2s = Sensor2Builder.build(rs);
 		
-		log.warn(String.format("'%d'", sensor2s.size()));
+		log.debug(String.format("'%d'", sensor2s.size()));
 		
 		if (sensor2s.size() <= 2) {
 						dbobj.setRunning(false);
 			dbObjectService.saveDbObject(dbobj);
 			System.out.println(dbobj);
 			
-			log.warn("sensor2 not running");
+			log.info("sensor2 not running");
 		} else {
 						dbobj.setRunning(true);
 			dbObjectService.saveDbObject(dbobj);

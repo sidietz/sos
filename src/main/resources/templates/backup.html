@@ -130,3 +130,53 @@ public class PersistenceConfig2 {
         return transactionManager;
     }
 }
+
+
+
+
+
+
+
+
+
+
+package de.oberamsystems.sos.model;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface NotRunnerRepository extends CrudRepository<NotRunner, Long> {
+	NotRunner findById(long id);
+}
+
+package de.oberamsystems.sos.model;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotRunnerService {
+	
+	@Autowired
+	private NotRunnerRepository repository;
+	
+    public NotRunner saveNotRunner(NotRunner notRunner) {
+        return repository.save(notRunner);
+    }
+
+    public List<NotRunner> getAllNotRunners() {
+        return (List<NotRunner>) repository.findAll();
+    }
+
+    public NotRunner getNotRunnerById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public void deleteNotRunnerById(Long id) {
+    	repository.deleteById(id);
+    }
+
+}
+
+

@@ -14,7 +14,7 @@ public class EmailService {
 	@Autowired
 	private EmailServiceConfig emailServiceConfig;
 
-    public void sendEmail(String to, String subject, String body) {
+    public void sendEmail(String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(emailServiceConfig.getFrom());
         message.setTo(emailServiceConfig.getTo());

@@ -8,17 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import de.oberamsystems.sos.model.MyProcess;
 import de.oberamsystems.sos.model.MyProcessService;
+import de.oberamsystems.sos.model.NotRunner;
 
-//@Component
 public class PsWatchdogController implements IWatchdogController {
 	
 	private static final Logger log = LoggerFactory.getLogger(PsWatchdogController.class);
 
-
-	/*
-	 * @Autowired private SingletonBean singletonBean;
-	 */
-	// @Autowired
 	private MyProcessService procService;
 
 	public PsWatchdogController() {
@@ -28,38 +23,41 @@ public class PsWatchdogController implements IWatchdogController {
 		this.procService = procService;
 	}
 
-	private List<PsWatchdog> pWdgs;// = new ArrayList<PsWatchdog>();
-
-	// @PostConstruct
+	private List<PsWatchdog> pWdgs;
+	
 	public void check() {
 		pWdgs = new ArrayList<PsWatchdog>();
 		for (MyProcess myproc : procService.getAllProcesses()) {
-			//System.out.println(myproc.getName());
 			PsWatchdog ps = new PsWatchdog(myproc);
 			
 			boolean before  = myproc.isRunning();			
-			MyProcess proc2 = ps.check();
-			boolean after  = proc2.isRunning();
+			ps.check();
+			boolean after  = myproc.isRunning();
 			
 			if (before == true && after == true) {
 				;
 			} else if (before == true && after == false) {
-				log.warn(String.format("Process '%s' died!", proc2.getName()));
+				log.warn(String.format("Process '%s' died!", myproc.getName()));
 			} else if (before == false && after == true) {
-				
+				log.warn(String.format("Service '%s' recovered!", myproc.getName()));
 			} else {
 				;
 			}
 			pWdgs.add(ps);
 			
-			procService.saveProcess(proc2);
-			//System.out.println(proc2.isRunning());
+			procService.saveProcess(myproc);
 		}
-		
-		/*
-		for (PsWatchdog pswdg : pWdgs) {
-			pswdg.check();
+	}
+
+	@Override
+	public List<NotRunner> getNotRunners() {
+		List<NotRunner> notRunners = new ArrayList<NotRunner>();
+		for (MyProcess service : procService.getAllProcesses()) {
+			if(!service.isRunning()) {
+				log.warn("not runner: " + service.getName());
+				notRunners.add(new NotRunner(service, null, null));
+			}
 		}
-		*/
+		return notRunners;
 	}
 }

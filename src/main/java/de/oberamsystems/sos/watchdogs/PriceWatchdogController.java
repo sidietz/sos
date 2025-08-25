@@ -7,14 +7,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.oberamsystems.sos.db.DbReader;
-import de.oberamsystems.sos.mail.EmailService;
-import de.oberamsystems.sos.mail.Mailer;
 import de.oberamsystems.sos.model.DbObject;
 import de.oberamsystems.sos.model.DbObjectService;
+import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model2.Price;
 import de.oberamsystems.sos.model2.PriceBuilder;
 
@@ -23,22 +21,30 @@ public class PriceWatchdogController implements IWatchdogController {
 
 	private static final Logger log = LoggerFactory.getLogger(PriceWatchdogController.class);
 
-	private DbObjectService dbObjectService;
-	private EmailService mailer;
-	
-	//private EmailService emailService;
-	
+	private DbObjectService dbObjectService;	
 
 	public PriceWatchdogController() {
 	}
 
-	public PriceWatchdogController(DbObjectService dbObjectService, EmailService mailer) {
+	public PriceWatchdogController(DbObjectService dbObjectService) {
 		this.dbObjectService = dbObjectService;
-		this.mailer = mailer;
 	}
 
 	@Override
 	public void check() {
+		DbObject dbobj = dbObjectService.getDbObjectsByName("price").get(0);
+		
+		if (checkDb()) {
+			dbobj.setRunning(true);
+		} else {
+			dbobj.setRunning(false);
+			log.info(String.format("DB-Object '%s' not running!", "price"));
+		}
+		
+		dbObjectService.saveDbObject(dbobj);
+	}
+	
+	private boolean checkDb() {
 		LocalDateTime date2 = LocalDateTime.now();
 		LocalDateTime date1 = date2.minusMinutes(15);
 
@@ -52,27 +58,29 @@ public class PriceWatchdogController implements IWatchdogController {
 				"N0m1596.");
 		ResultSet rs = dbR.execute(query, params);
 
-		DbObject dbobj = dbObjectService.getDbObjectsByName("price").get(0);
-
 		if (rs == null) {
-			dbobj.setRunning(false);
-			return;
+			return false;
 		}
+		
 		List<Price> sensor2s = PriceBuilder.build(rs);
-		log.debug(String.format("found price entries: '%d'", sensor2s.size()));
-
 		if (sensor2s.size() <= 2) {
-			dbobj.setRunning(false);
-			dbObjectService.saveDbObject(dbobj);
-			//System.out.println(dbobj);
-
-			log.warn("price not running");
-			String msg =  String.format("'%s' '%s' läuft nicht", "price", dbobj.getDbName());
-			mailer.sendEmail("simon.dietz@vodafone.de", "Test", msg);
+			return false;
 		} else {
-			dbobj.setRunning(true);
-			dbObjectService.saveDbObject(dbobj);
+			return true;
 		}
+		
+	}
+
+	@Override
+	public List<NotRunner> getNotRunners() {
+		List<NotRunner> notRunners = new ArrayList<NotRunner>();
+		if (checkDb()) {
+			;
+		} else {
+			notRunners.add(new NotRunner(new DbObject("price"), null, null));
+		}
+
+		return notRunners;
 	}
 
 }

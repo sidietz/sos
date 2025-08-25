@@ -1,6 +1,7 @@
 package de.oberamsystems.sos.watchdogs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,18 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import de.oberamsystems.sos.model.MyService;
 import de.oberamsystems.sos.model.MyServiceService;
+import de.oberamsystems.sos.model.NotRunner;
 
 
 //@Component
 public class SystemdWatchdogController implements IWatchdogController {
 	
-	private static final Logger log = LoggerFactory.getLogger(PsWatchdogController.class);
+	private static final Logger log = LoggerFactory.getLogger(SystemdWatchdogController.class);
 
-
-	/*
-	 * @Autowired private SingletonBean singletonBean;
-	 */
-	// @Autowired
 	private MyServiceService serviceService;
 
 	public SystemdWatchdogController() {
@@ -29,38 +26,42 @@ public class SystemdWatchdogController implements IWatchdogController {
 		this.serviceService = serviceService;
 	}
 
-	private List<SystemdWatchdog> pWdgs;// = new ArrayList<PsWatchdog>();
+	private List<SystemdWatchdog> pWdgs;
 
-	// @PostConstruct
 	public void check() {
 		pWdgs = new ArrayList<SystemdWatchdog>();
 		for (MyService myproc : serviceService.getAllServices()) {
-			//System.out.println(myproc.getName());
+			
 			SystemdWatchdog ps = new SystemdWatchdog(myproc);
 			
-			boolean before  = myproc.isRunning();			
-			MyService proc2 = ps.check();
-			boolean after  = proc2.isRunning();
+			boolean before  = myproc.isRunning();
+			ps.check();
+			boolean after = myproc.isRunning();
 			
 			if (before == true && after == true) {
 				;
 			} else if (before == true && after == false) {
-				log.warn(String.format("Service '%s' died!", proc2.getName()));
+				log.warn(String.format("Service '%s' died!", myproc.getName()));
 			} else if (before == false && after == true) {
-				
+				log.warn(String.format("Service '%s' recovered!", myproc.getName()));
 			} else {
 				;
 			}
 			pWdgs.add(ps);
 			
-			serviceService.saveService(proc2);
-			//System.out.println(proc2.isRunning());
+			serviceService.saveService(myproc);
 		}
-		
-		/*
-		for (PsWatchdog pswdg : pWdgs) {
-			pswdg.check();
+	}
+
+	@Override
+	public List<NotRunner> getNotRunners() {
+		List<NotRunner> notRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
+		for (MyService service : serviceService.getAllServices()) {
+			if(!service.isRunning()) {
+				log.warn("not runner: " + service.getName());
+				notRunners.add(new NotRunner(service, null, null));
+			}
 		}
-		*/
+		return notRunners;
 	}
 }
