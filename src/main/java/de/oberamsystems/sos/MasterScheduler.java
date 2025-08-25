@@ -19,6 +19,8 @@ import de.oberamsystems.sos.model.MyProcessService;
 import de.oberamsystems.sos.model.MyServiceService;
 import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model.NotRunnerManager;
+import de.oberamsystems.sos.model2.Sensor2;
+import de.oberamsystems.sos.watchdogs.DbObjectController;
 import de.oberamsystems.sos.watchdogs.IWatchdogController;
 import de.oberamsystems.sos.watchdogs.PriceWatchdogController;
 import de.oberamsystems.sos.watchdogs.PsWatchdogController;
@@ -51,7 +53,7 @@ public class MasterScheduler {
 
 		List<NotRunner> oldNotRunners = notRunnerService.getNotRunners();
 		List<NotRunner> newNotRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
-		
+
 		// System.out.println("Ran scheduled!");
 		log.debug("run scheduled tasks");
 		IWatchdogController pwc = new PsWatchdogController(procService);
@@ -60,16 +62,17 @@ public class MasterScheduler {
 		IWatchdogController swc = new SystemdWatchdogController(serviceService);
 		swc.check();
 
-		IWatchdogController dbc = new SensorWatchdogController(dbObjectService);
-		dbc.check();
-		IWatchdogController pc = new PriceWatchdogController(dbObjectService);
+		//IWatchdogController dbc = new SensorWatchdogController(dbObjectService);
+		IWatchdogController dbc2 = new DbObjectController(dbObjectService, "sensor2");
+		dbc2.check();
+		IWatchdogController pc = new DbObjectController(dbObjectService, "price");
 		pc.check();
 
 		List<NotRunner> tmp = visitController(pwc);
 		newNotRunners.addAll(tmp);
 		tmp = visitController(swc);
 		newNotRunners.addAll(tmp);
-		tmp = visitController(dbc);
+		tmp = visitController(dbc2);
 		newNotRunners.addAll(tmp);
 		tmp = visitController(pc);
 		newNotRunners.addAll(tmp);
