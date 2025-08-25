@@ -8,27 +8,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.oberamsystems.sos.model.MyService;
-import de.oberamsystems.sos.model.MyServiceService;
+import de.oberamsystems.sos.model.MyServiceRepository;
 import de.oberamsystems.sos.model.NotRunner;
 
 public class SystemdWatchdogController implements IWatchdogController {
 	
 	private static final Logger log = LoggerFactory.getLogger(SystemdWatchdogController.class);
 
-	private MyServiceService serviceService;
+	private MyServiceRepository repo;
 
 	public SystemdWatchdogController() {
 	}
 
-	public SystemdWatchdogController(MyServiceService serviceService) {
-		this.serviceService = serviceService;
+	public SystemdWatchdogController(MyServiceRepository repo) {
+		this.repo = repo;
 	}
 
 	private List<SystemdWatchdog> pWdgs;
 
 	public void check() {
 		pWdgs = new ArrayList<SystemdWatchdog>();
-		for (MyService myproc : serviceService.getAllServices()) {
+		for (MyService myproc : repo.findAll()) {
 			
 			SystemdWatchdog ps = new SystemdWatchdog(myproc);
 			
@@ -47,14 +47,14 @@ public class SystemdWatchdogController implements IWatchdogController {
 			}
 			pWdgs.add(ps);
 			
-			serviceService.saveService(myproc);
+			repo.save(myproc);
 		}
 	}
 
 	@Override
 	public List<NotRunner> getNotRunners() {
 		List<NotRunner> notRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
-		for (MyService service : serviceService.getAllServices()) {
+		for (MyService service : repo.findAll()) {
 			if(!service.isRunning()) {
 				log.debug("not runner: " + service.getName());
 				notRunners.add(new NotRunner(service, null, null));

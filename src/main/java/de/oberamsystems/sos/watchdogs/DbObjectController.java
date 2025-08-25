@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.oberamsystems.sos.db.DbReader;
 import de.oberamsystems.sos.model.DbObject;
-import de.oberamsystems.sos.model.DbObjectService;
+import de.oberamsystems.sos.model.DbObjectRepository ;
 import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model2.DbEntry;
 import de.oberamsystems.sos.model2.Price;
@@ -20,7 +20,7 @@ public class DbObjectController implements IWatchdogController {
 
 	private static final Logger log = LoggerFactory.getLogger(DbObjectController.class);
 
-	private DbObjectService dbObjectService;
+	private DbObjectRepository repo;
 	
 	private Price price;// = new Price();
 	private Sensor2 sensor2;// = new Sensor2();
@@ -30,8 +30,8 @@ public class DbObjectController implements IWatchdogController {
 	public DbObjectController() {
 	}
 
-	public DbObjectController(DbObjectService dbObjectService, String type) {
-		this.dbObjectService = dbObjectService;
+	public DbObjectController(DbObjectRepository repo, String type) {
+		this.repo = repo;
 		this.type = type;
 		
 		if (type.equals("price") ) {
@@ -57,7 +57,7 @@ public class DbObjectController implements IWatchdogController {
 
 	@Override
 	public void check() {
-		DbObject dbobj = dbObjectService.getDbObjectsByName(getTableNameFromType()).get(0);
+		DbObject dbobj = repo.getByName(getTableNameFromType()).get(0);
 		boolean checkedDb = false;
 		
 		if (type.equals("price") ) {
@@ -75,7 +75,7 @@ public class DbObjectController implements IWatchdogController {
 			log.info(String.format("DB-Object '%s' not running!", "price"));
 		}
 
-		dbObjectService.saveDbObject(dbobj);
+		repo.save(dbobj);
 	}
 
 	public boolean checkDb(DbEntry c) {

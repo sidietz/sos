@@ -1,28 +1,21 @@
 package de.oberamsystems.sos.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
-import de.oberamsystems.sos.model.MyService;
-import de.oberamsystems.sos.model.MyServiceService;
+import de.oberamsystems.sos.model.MyServiceRepository;
 
 @Controller
 public class MyServiceController {
 	
 	@Autowired
-	private MyServiceService serviceService;
-	
-	@ModelAttribute("allServices")
-	public List<MyService> populateServices() {
-	    return this.serviceService.getAllServices();
-	}
+	private MyServiceRepository repo;
 
 	@GetMapping("/services")
-	public String services() {
+	public String services(Model model) {
+		model.addAttribute("allServices", repo.findAll());
 		return "services";
 	}
 

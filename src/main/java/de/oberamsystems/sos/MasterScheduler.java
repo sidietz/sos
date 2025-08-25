@@ -14,9 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import de.oberamsystems.sos.mail.EmailService;
-import de.oberamsystems.sos.model.DbObjectService;
-import de.oberamsystems.sos.model.MyProcessService;
-import de.oberamsystems.sos.model.MyServiceService;
+import de.oberamsystems.sos.model.DbObjectRepository;
+import de.oberamsystems.sos.model.MyProcessRepository;
+import de.oberamsystems.sos.model.MyServiceRepository;
 import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model.NotRunnerManager;
 import de.oberamsystems.sos.watchdogs.DbObjectController;
@@ -31,13 +31,13 @@ public class MasterScheduler {
 	private static final Logger log = LoggerFactory.getLogger(MasterScheduler.class);
 
 	@Autowired
-	private MyProcessService procService;
+	private MyProcessRepository procRepo;
 
 	@Autowired
-	private MyServiceService serviceService;
+	private MyServiceRepository serviceRepo;
 
 	@Autowired
-	private DbObjectService dbObjectService;
+	private DbObjectRepository dbObjectRepo;
 
 	@Autowired
 	private NotRunnerManager notRunnerService;
@@ -52,13 +52,13 @@ public class MasterScheduler {
 		List<NotRunner> newNotRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
 
 		log.debug("run scheduled tasks");
-		IWatchdogController pwc = new PsWatchdogController(procService);
+		IWatchdogController pwc = new PsWatchdogController(procRepo);
 		pwc.check();
-		IWatchdogController swc = new SystemdWatchdogController(serviceService);
+		IWatchdogController swc = new SystemdWatchdogController(serviceRepo);
 		swc.check();
-		IWatchdogController dbc2 = new DbObjectController(dbObjectService, "sensor2");
+		IWatchdogController dbc2 = new DbObjectController(dbObjectRepo, "sensor2");
 		dbc2.check();
-		IWatchdogController pc = new DbObjectController(dbObjectService, "price");
+		IWatchdogController pc = new DbObjectController(dbObjectRepo, "price");
 		pc.check();
 
 		List<NotRunner> tmp = visitController(pwc);

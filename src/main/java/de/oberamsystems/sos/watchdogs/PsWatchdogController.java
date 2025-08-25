@@ -7,27 +7,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.oberamsystems.sos.model.MyProcess;
-import de.oberamsystems.sos.model.MyProcessService;
+import de.oberamsystems.sos.model.MyProcessRepository;
 import de.oberamsystems.sos.model.NotRunner;
 
 public class PsWatchdogController implements IWatchdogController {
 	
 	private static final Logger log = LoggerFactory.getLogger(PsWatchdogController.class);
 
-	private MyProcessService procService;
+	private MyProcessRepository repo;
 
 	public PsWatchdogController() {
 	}
 
-	public PsWatchdogController(MyProcessService procService) {
-		this.procService = procService;
+	public PsWatchdogController(MyProcessRepository repo) {
+		this.repo = repo;
 	}
 
 	private List<PsWatchdog> pWdgs;
 	
 	public void check() {
 		pWdgs = new ArrayList<PsWatchdog>();
-		for (MyProcess myproc : procService.getAllProcesses()) {
+		for (MyProcess myproc : repo.findAll()) {
 			PsWatchdog ps = new PsWatchdog(myproc);
 			
 			boolean before  = myproc.isRunning();			
@@ -45,14 +45,14 @@ public class PsWatchdogController implements IWatchdogController {
 			}
 			pWdgs.add(ps);
 			
-			procService.saveProcess(myproc);
+			repo.save(myproc);
 		}
 	}
 
 	@Override
 	public List<NotRunner> getNotRunners() {
 		List<NotRunner> notRunners = new ArrayList<NotRunner>();
-		for (MyProcess service : procService.getAllProcesses()) {
+		for (MyProcess service : repo.findAll()) {
 			if(!service.isRunning()) {
 				log.debug("not runner: " + service.getName());
 				notRunners.add(new NotRunner(service, null, null));

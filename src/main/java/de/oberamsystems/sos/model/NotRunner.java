@@ -3,9 +3,13 @@ package de.oberamsystems.sos.model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 public class NotRunner {
 
 	private Watchable watchable;
+	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDateTime notRunningSince;
 	private Duration duration;
 
