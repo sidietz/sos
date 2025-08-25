@@ -9,19 +9,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.oberamsystems.sos.MasterScheduler;
-
 public class DbReader {
 	
-	private static final Logger log = LoggerFactory.getLogger(MasterScheduler.class);
+	private static final Logger log = LoggerFactory.getLogger(DbReader.class);
 
 	private String connectionString;
 	private String driver;
 	private String user;
 	private String password;
 
-	public DbReader(String driver, String conS, String user, String password) {
-		this.connectionString = conS;
+	public DbReader(String driver, String connectionString, String user, String password) {
+		this.connectionString = connectionString;
 		this.driver = driver;
 		this.user = user;
 		this.password = password;
@@ -43,7 +41,7 @@ public class DbReader {
 				
 				return resultSet;				
 			} else {
-				System.out.println("Not Connected...");
+				log.warn(String.format("DbReader could not connect to Database\n%s with\n%s", connectionString, query));
 				return null;
 			}
 		} catch (Exception e) {

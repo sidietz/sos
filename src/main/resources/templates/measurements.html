@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="../static/css/tlf.css" th:href="@{/css/tlf.css}"
+	rel="stylesheet" />
+
+<link th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link th:href="@{/css/app.css}" rel="stylesheet" />
+<script th:src="@{/webjars/bootstrap/5.3.7/js/bootstrap.bundle.min.js}"
+	defer></script>
+<script th:src="@{/js/app.js}" defer></script>
+
+<title>[mqtt] Measurements</title>
+</head>
+<body>
+
+	<div th:insert="~{header :: header}">...</div>
+
+	<div class="alist" th:unless="${#lists.isEmpty(allMeasurements)}">
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>ID</td>
+					<td>date</td>
+					<td>place</td>
+					<td>sensor</td>
+					<td>temperature</td>
+					<td>humidity</td>
+					<td>co2</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="e : ${allMeasurements}">
+					<td th:text="${e.id}"></td>
+					<td th:text="${e.date}"></td>
+					<td th:text="${e.place}"></td>
+					<td th:text="${e.sensor}"></td>
+					<td th:text="${e.temperature}"></td>
+					<td th:text="${e.humidity}"></td>
+					<td th:text="${e.co2}"></td>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
