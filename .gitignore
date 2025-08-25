@@ -1,3 +1,7 @@
+
+sos.log
+src/main/resources/mail.properties
+
 HELP.md
 .gradle
 build/
