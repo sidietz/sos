@@ -11,8 +11,6 @@ import de.oberamsystems.sos.model.MyService;
 import de.oberamsystems.sos.model.MyServiceService;
 import de.oberamsystems.sos.model.NotRunner;
 
-
-//@Component
 public class SystemdWatchdogController implements IWatchdogController {
 	
 	private static final Logger log = LoggerFactory.getLogger(SystemdWatchdogController.class);

@@ -10,5 +10,5 @@ sos observed
 - Dienste
 - Datenbankaktivität
 
-## Datenquellen
-Datenquellen sind die Kraftwerksliste der Bundesnetzagentur, die unter SMARD veröffentlichten produzierten Strommengen sowie Daten des europäischen Emissionsregisters PRTR, welche unter Thruu veröffentlicht sind.
+## Language
+Die Software ist unlokalisiert, um den Sprachmischmasch zu komplettieren.
