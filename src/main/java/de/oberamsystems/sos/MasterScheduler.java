@@ -15,12 +15,14 @@ import org.springframework.stereotype.Component;
 
 import de.oberamsystems.sos.mail.EmailService;
 import de.oberamsystems.sos.model.DbObjectRepository;
+import de.oberamsystems.sos.model.MyHttpServiceRepository;
 import de.oberamsystems.sos.model.MyProcessRepository;
 import de.oberamsystems.sos.model.MyServiceRepository;
 import de.oberamsystems.sos.model.NotRunner;
 import de.oberamsystems.sos.model.NotRunnerManager;
 import de.oberamsystems.sos.watchdogs.DbObjectController;
 import de.oberamsystems.sos.watchdogs.IWatchdogController;
+import de.oberamsystems.sos.watchdogs.PingWatchdogController;
 import de.oberamsystems.sos.watchdogs.PsWatchdogController;
 import de.oberamsystems.sos.watchdogs.SystemdWatchdogController;
 
@@ -38,6 +40,9 @@ public class MasterScheduler {
 
 	@Autowired
 	private DbObjectRepository dbObjectRepo;
+	
+	@Autowired
+	private MyHttpServiceRepository httpRepo;
 
 	@Autowired
 	private NotRunnerManager notRunnerService;
@@ -60,6 +65,8 @@ public class MasterScheduler {
 		dbc2.check();
 		IWatchdogController pc = new DbObjectController(dbObjectRepo, "price");
 		pc.check();
+		IWatchdogController hs = new PingWatchdogController(httpRepo);
+		hs.check();
 
 		List<NotRunner> tmp = visitController(pwc);
 		newNotRunners.addAll(tmp);
@@ -68,6 +75,8 @@ public class MasterScheduler {
 		tmp = visitController(dbc2);
 		newNotRunners.addAll(tmp);
 		tmp = visitController(pc);
+		newNotRunners.addAll(tmp);
+		tmp = visitController(hs);
 		newNotRunners.addAll(tmp);
 
 		List<NotRunner> wentRunning = wentRunning(oldNotRunners, newNotRunners);

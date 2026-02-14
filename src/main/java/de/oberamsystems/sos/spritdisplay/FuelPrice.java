@@ -10,6 +10,7 @@ public class FuelPrice {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
+	@Column(name = "station_id")
 	private String stationId;
 	@Column(name = "changed_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime date;
