@@ -72,7 +72,7 @@ public class DbObjectController implements IWatchdogController {
 			dbobj.setRunning(true);
 		} else {
 			dbobj.setRunning(false);
-			log.info(String.format("DB-Object '%s' not running!", "price"));
+			log.debug(String.format("DB-Object '%s' not running!", "price"));
 		}
 
 		repo.save(dbobj);

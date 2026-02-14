@@ -39,7 +39,7 @@ public class PsWatchdogController implements IWatchdogController {
 			} else if (before == true && after == false) {
 				log.info(String.format("Process '%s' died!", myproc.getName()));
 			} else if (before == false && after == true) {
-				log.info(String.format("Service '%s' recovered!", myproc.getName()));
+				log.info(String.format("Process '%s' recovered!", myproc.getName()));
 			} else {
 				;
 			}
