@@ -25,6 +25,7 @@ public class PsWatchdogController implements IWatchdogController {
 
 	private List<PsWatchdog> pWdgs;
 	
+	@Override
 	public void check() {
 		pWdgs = new ArrayList<PsWatchdog>();
 		for (MyProcess myproc : repo.findAll()) {

@@ -1,5 +1,12 @@
 package de.oberamsystems.sos;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,6 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,6 +40,10 @@ public class MasterScheduler {
 
 	private static final Logger log = LoggerFactory.getLogger(MasterScheduler.class);
 
+
+	@Value("${sos.serverip}")
+	private String SERVERIP;
+
 	@Autowired
 	private MyProcessRepository procRepo;
 
@@ -40,7 +52,7 @@ public class MasterScheduler {
 
 	@Autowired
 	private DbObjectRepository dbObjectRepo;
-	
+
 	@Autowired
 	private MyHttpServiceRepository httpRepo;
 
@@ -96,7 +108,7 @@ public class MasterScheduler {
 
 		List<NotRunner> stillNotRunning = new ArrayList<NotRunner>(notRunnerService.getNotRunners());
 
-		
+
 		List<NotRunner> toDelete = new ArrayList<NotRunner>();
 
 		for (NotRunner nr : wentNotRunning) {
@@ -104,7 +116,7 @@ public class MasterScheduler {
 				toDelete.add(nr);
 			}
 		}
-		
+
 		for (NotRunner nr : toDelete) {
 			stillNotRunning.remove(nr);
 			stillNotRunning.remove(nr);
@@ -116,6 +128,7 @@ public class MasterScheduler {
 		}
 
 		sendNrMail(wentNotRunning, wentRunning, stillNotRunning);
+		sendTelegramNotification(wentNotRunning, wentRunning, stillNotRunning);
 
 		return 0;
 	}
@@ -181,6 +194,63 @@ public class MasterScheduler {
 		String subject = "[SOS] not running stuff";
 
 		mailer.sendHtmlEmail(subject, nrs, nrs2);
+	}
+
+	private void sendTelegramNotification(List<NotRunner> nrs, List<NotRunner> nrs2, List<NotRunner> nrs3) {
+
+		if (nrs.isEmpty() && nrs2.isEmpty()) {
+			return;
+		}
+		
+		String s = "";
+
+		if (nrs2.isEmpty()) {
+			s = "Not running: ";
+			for (NotRunner nr : nrs) {
+				s = s + nr.getWatchable().getName() + ", ";
+			}
+		}
+
+		if (nrs2.isEmpty()) {
+			s = s + "Running again: ";
+			for (NotRunner nr : nrs2) {
+				s = s + nr.getWatchable().getName() + ", ";
+			}
+		}
+
+		if (nrs3.isEmpty()) {
+			s = s + "Still not running: ";
+			for (NotRunner nr : nrs3) {
+				s = s + nr.getWatchable().getName() + ", ";
+			}
+		}
+
+		log.trace(s);
+		try {
+			sendNotification(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn(e.getMessage());
+		}
+
+
+
+	}
+
+	private void sendNotification(String s) throws Exception {
+		String uri = "http://" + "localhost" + ":30001/v0/msg";
+		String payload = "{\"message\": \"" + s + "\"}";
+		log.trace(payload);
+		HttpRequest request = HttpRequest.newBuilder(new URI(uri))
+				.header("Content-Type", "application/json")
+				.POST( BodyPublishers.ofString(payload))
+				//.timeout(Duration.ofSeconds(25))
+				.build();
+		HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1).build();
+		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+		int code = response.statusCode();
+		log.trace("Code for: sos-adapter is: " + code);
+		return;
 	}
 
 	private void sendNrMail(List<NotRunner> nrs, List<NotRunner> nrs2, List<NotRunner> nrs3) {

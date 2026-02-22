@@ -66,6 +66,7 @@ public class SosApplication  {
 			repository.save(new MyHttpService(7070, "evcc", "baremetal"));
 			repository.save(new MyHttpService(3003, "grafana", "baremetal"));
 			repository.save(new MyHttpService(8000, "slm", "baremetal"));
+			repository.save(new MyHttpService(30001, "sos-botadapter", "baremetal"));
 			repository.save(new MyHttpService("plantwatch.de", 443, "plantwatch", "uberspace", "https://"));
 			repository.save(new MyHttpService("fuelsentinel.de", 443, "fuelsentinel", "uberspace", "https://"));
 		};

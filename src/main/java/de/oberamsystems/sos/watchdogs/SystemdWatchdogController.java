@@ -26,6 +26,7 @@ public class SystemdWatchdogController implements IWatchdogController {
 
 	private List<SystemdWatchdog> pWdgs;
 
+	@Override
 	public void check() {
 		pWdgs = new ArrayList<SystemdWatchdog>();
 		for (MyService myproc : repo.findAll()) {
