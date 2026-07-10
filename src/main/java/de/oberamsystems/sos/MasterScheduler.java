@@ -40,7 +40,6 @@ public class MasterScheduler {
 
 	private static final Logger log = LoggerFactory.getLogger(MasterScheduler.class);
 
-
 	@Value("${sos.serverip}")
 	private String SERVERIP;
 
