@@ -7,31 +7,30 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.oberamsystems.sos.model.MyService;
-import de.oberamsystems.sos.model.MyServiceRepository;
+import de.oberamsystems.sos.model.MyHttpService;
+import de.oberamsystems.sos.model.MyHttpServiceRepository;
 import de.oberamsystems.sos.model.NotRunner;
 
-public class SystemdWatchdogController implements IWatchdogController {
+public class PingWatchdogController implements IWatchdogController {
 	
-	private static final Logger log = LoggerFactory.getLogger(SystemdWatchdogController.class);
+	private static final Logger log = LoggerFactory.getLogger(PsWatchdogController.class);
 
-	private MyServiceRepository repo;
+	private MyHttpServiceRepository repo;
+	private List<PingWatchdog> pWdgs;
 
-	public SystemdWatchdogController() {
+	public PingWatchdogController() {
 	}
 
-	public SystemdWatchdogController(MyServiceRepository repo) {
+	public PingWatchdogController(MyHttpServiceRepository repo) {
 		this.repo = repo;
 	}
 
-	private List<SystemdWatchdog> pWdgs;
-
 	@Override
 	public void check() {
-		pWdgs = new ArrayList<SystemdWatchdog>();
-		for (MyService myproc : repo.findAll()) {
+		pWdgs = new ArrayList<PingWatchdog>();
+		for (MyHttpService myproc : repo.findAll()) {
 			
-			SystemdWatchdog ps = new SystemdWatchdog(myproc);
+			PingWatchdog ps = new PingWatchdog(myproc);
 			
 			boolean before  = myproc.isRunning();
 			ps.check();
@@ -47,7 +46,7 @@ public class SystemdWatchdogController implements IWatchdogController {
 				;
 			}
 			pWdgs.add(ps);
-			
+
 			repo.save(myproc);
 		}
 	}
@@ -55,7 +54,7 @@ public class SystemdWatchdogController implements IWatchdogController {
 	@Override
 	public List<NotRunner> getNotRunners() {
 		List<NotRunner> notRunners = Collections.synchronizedList(new ArrayList<NotRunner>());
-		for (MyService service : repo.findAll()) {
+		for (MyHttpService service : repo.findAll()) {
 			if(!service.isRunning()) {
 				log.debug("not runner: " + service.getName());
 				notRunners.add(new NotRunner(service, null, null));
@@ -63,4 +62,5 @@ public class SystemdWatchdogController implements IWatchdogController {
 		}
 		return notRunners;
 	}
+
 }

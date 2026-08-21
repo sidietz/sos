@@ -12,27 +12,34 @@
 	defer></script>
 <script th:src="@{/js/app.js}" defer></script>
 
-<title>SOS - dbobjects</title>
+<title>SOS</title>
 </head>
 <body>
 
 <div th:insert="~{header :: header}">...</div>
 
-	<div class="proclist" th:unless="${#lists.isEmpty(allDbObjects)}">
+	<div class="proclist" th:unless="${#lists.isEmpty(allHttpServices)}">
 
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<td>Hostname</td>
+					<td>Port</td>
 					<td>Name</td>
+					<td>hostingType</td>
 					<td>Running?</td>
+
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="procs : ${allDbObjects}">
-					<td th:text="${{procs.dbName}}"></td>
+				<tr th:each="svcs : ${allHttpServices}">
+					<td th:text="${{svcs.hostname}}"></td>
+					<td th:text="${{svcs.port}}"></td>
+					<td th:text="${{svcs.name}}"></td>
+					<td th:text="${{svcs.hostingType}}"></td>
 					<td
-						th:style="${procs.isRunning} ? 'background-color: green' : 'background-color: red'"
-						th:text="${procs.isRunning} ? 'Yes' : 'No'" />
+						th:style="${svcs.isRunning} ? 'background-color: green' : 'background-color: red'"
+						th:text="${svcs.isRunning} ? 'Yes' : 'No'" />
 			</tbody>
 		</table>
 	</div>
