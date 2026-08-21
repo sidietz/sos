@@ -95,12 +95,13 @@ public class DbObjectController implements IWatchdogController {
 					"simon", "N0m1596.");
 			ResultSet rs = dbR.execute(query, params);
 
-			List<DbEntry> dbEntries = c.build(rs);
 			if (rs == null) {
-				return false;
-			}
+                                return false;
+                        }
 
+			List<DbEntry> dbEntries = c.build(rs);
 			List<DbEntry> sensor2s = dbEntries;
+
 			if (sensor2s.size() <= 2) {
 				return false;
 			} else {
