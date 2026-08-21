@@ -10,10 +10,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import de.oberamsystems.sos.model.DbObject;
+import de.oberamsystems.sos.model.DbObjectRepository;
+import de.oberamsystems.sos.model.MyProcess;
+import de.oberamsystems.sos.model.MyProcessRepository;
 import de.oberamsystems.sos.model.MyService;
 import de.oberamsystems.sos.model.MyServiceRepository;
 import de.oberamsystems.sos.model.NotRunner;
@@ -27,6 +31,12 @@ class SosApplicationTests {
 
     @Autowired
     private MyServiceRepository repo;
+
+    @Autowired
+    private MyProcessRepository processRepo;
+
+    @Autowired
+    private DbObjectRepository dbObjectRepo;
 
 	
 	@Test
@@ -88,6 +98,34 @@ class SosApplicationTests {
 	    List<NotRunner> newNr = MasterScheduler.wentNotRunning(new ArrayList<NotRunner>(), oldNr);
 
 	    assertEquals(newNr.size(), 1);
+	}
+
+	@Test
+	public void testProcessRepository() {
+	    MyProcess p = new MyProcess("java", "java -jar app.jar");
+	    entityManager.persist(p);
+	    entityManager.flush();
+
+	    List<MyProcess> found = processRepo.findByName(p.getName());
+	    assertEquals(1, found.size());
+	    assertEquals("java", found.get(0).getName());
+	    assertEquals("java -jar app.jar", found.get(0).getCommand());
+	}
+
+	@Test
+	public void testDbObjectRepository() {
+	    DbObject dbObj = new DbObject("postgres");
+	    dbObj.setDbName("mydb");
+	    entityManager.persist(dbObj);
+	    entityManager.flush();
+
+	    List<DbObject> foundByName = dbObjectRepo.getByName("postgres");
+	    assertEquals(1, foundByName.size());
+	    assertEquals("postgres", foundByName.get(0).getName());
+
+	    List<DbObject> foundByDbName = dbObjectRepo.findByDbName("mydb");
+	    assertEquals(1, foundByDbName.size());
+	    assertEquals("mydb", foundByDbName.get(0).getDbName());
 	}
 
 }

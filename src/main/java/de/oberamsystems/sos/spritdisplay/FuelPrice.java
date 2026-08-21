@@ -75,6 +75,6 @@ public class FuelPrice {
 	
 	@Override
 	public String toString() {
-		return String.format("FuelPrice[id='%d', date='%s', stationId='%s', e10='%s']", date, stationId, e10);
+		return String.format("FuelPrice[id='%d', date='%s', stationId='%s', e10='%s']", id, date, stationId, e10);
 	}
 }
