@@ -29,7 +29,7 @@ dependencies {
 	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation("org.thymeleaf:thymeleaf:3.1.5.RELEASE")
 	implementation 'org.webjars:bootstrap:5.3.7'
-	implementation 'org.postgresql:postgresql:42.7.11'
+	implementation 'org.postgresql:postgresql:42.7.12'
 	implementation 'jakarta.mail:jakarta.mail-api:2.1.5'
 	//implementation 'ch.qos.logback:logback-core:1.5.18'
 	implementation 'org.hibernate.orm:hibernate-core:7.4.1.Final'
