@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '4.1.1'
+	id 'org.springframework.boot' version '4.2.0-M2'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'jacoco'
 }
@@ -29,12 +29,11 @@ dependencies {
 	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation("org.thymeleaf:thymeleaf:3.1.5.RELEASE")
 	implementation 'org.webjars:bootstrap:5.3.7'
-	implementation 'org.postgresql:postgresql:42.7.11'
+	implementation 'org.postgresql:postgresql'
 	implementation 'jakarta.mail:jakarta.mail-api:2.1.5'
 	//implementation 'ch.qos.logback:logback-core:1.5.18'
-	implementation 'org.hibernate.orm:hibernate-core:7.4.1.Final'
-	//implementation 'org.postgresql:postgresql'
-	runtimeOnly 'com.h2database:h2:2.4.240'
+	implementation 'org.hibernate.orm:hibernate-core:7.4.13.Final'
+	runtimeOnly 'com.h2database:h2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
